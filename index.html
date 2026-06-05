@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPMS — نظام إدارة مشاريع التخرج</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+/* ============================================
+   GPMS - Graduation Project Management System
+   style.css - Core styles, variables, themes
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&display=swap');
+
+/* ─── CSS Variables ─────────────────────────── */
+:root {
+  /* Brand Colors */
+  --accent-primary: #6C63FF;
+  --accent-secondary: #FF6584;
+  --accent-tertiary: #43E97B;
+  --accent-warning: #F7971E;
+  --accent-info: #38A1F3;
+
+  /* Light Theme */
+  --bg-base: #F0F2F8;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --bg-overlay: rgba(255,255,255,0.85);
+  --bg-sidebar: #1A1D2E;
+  --bg-sidebar-hover: rgba(108,99,255,0.15);
+  --bg-sidebar-active: rgba(108,99,255,0.25);
+
+  --text-primary: #1A1D2E;
+  --text-secondary: #5A5E7A;
+  --text-muted: #9299B8;
+  --text-sidebar: #C8CCEA;
+  --text-sidebar-active: #FFFFFF;
+  --text-on-accent: #FFFFFF;
+
+  --border-subtle: rgba(0,0,0,0.07);
+  --border-medium: rgba(0,0,0,0.12);
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  --shadow-accent: 0 8px 30px rgba(108,99,255,0.25);
+
+  /* Sidebar */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+
+  /* Topbar */
+  --topbar-height: 64px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Font */
+  --font-primary: 'Cairo', sans-serif;
+  --font-display: 'Tajawal', sans-serif;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-base: #0F1117;
+  --bg-surface: #1A1D2E;
+  --bg-elevated: #222539;
+  --bg-overlay: rgba(26, 29, 46, 0.92);
+  --bg-sidebar: #12141F;
+  --bg-sidebar-hover: rgba(108,99,255,0.12);
+  --bg-sidebar-active: rgba(108,99,255,0.22);
+
+  --text-primary: #E8EAF6;
+  --text-secondary: #9299B8;
+  --text-muted: #5A5E7A;
+  --text-sidebar: #8B91B5;
+  --text-sidebar-active: #FFFFFF;
+
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-medium: rgba(255,255,255,0.1);
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+/* ─── Reset & Base ───────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  direction: rtl;
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+/* ─── Typography ─────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+h2 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.3rem); }
+h4 { font-size: 1.05rem; }
+
+p { line-height: 1.7; color: var(--text-secondary); }
+
+a { text-decoration: none; color: var(--accent-primary); transition: opacity var(--transition-fast); }
+a:hover { opacity: 0.8; }
+
+ul { list-style: none; }
+
+/* ─── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Utility Classes ────────────────────────── */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.hidden { display: none !important; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.text-sm { font-size: 0.8rem; }
+.text-xs { font-size: 0.72rem; }
+.text-lg { font-size: 1.1rem; }
+.text-xl { font-size: 1.25rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+.text-accent { color: var(--accent-primary); }
+.text-success { color: var(--accent-tertiary); }
+.text-warning { color: var(--accent-warning); }
+.text-danger { color: var(--accent-secondary); }
+
+/* ─── Buttons ────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn-primary {
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: var(--shadow-accent);
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 35px rgba(108,99,255,0.35);
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+.btn-secondary:hover {
+  background: var(--bg-base);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.5rem;
+}
+.btn-ghost:hover {
+  background: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+.btn-icon:hover {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+/* ─── Badges ─────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.badge-primary { background: rgba(108,99,255,0.15); color: var(--accent-primary); }
+.badge-success { background: rgba(67,233,123,0.15); color: #2BC56A; }
+.badge-warning { background: rgba(247,151,30,0.15); color: var(--accent-warning); }
+.badge-danger  { background: rgba(255,101,132,0.15); color: var(--accent-secondary); }
+.badge-info    { background: rgba(56,161,243,0.15); color: var(--accent-info); }
+.badge-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  background: var(--accent-secondary);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Cards ──────────────────────────────────── */
+.card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  transition: all var(--transition-normal);
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ─── Divider ────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 1rem 0;
+}
+
+/* ─── Avatar ─────────────────────────────────── */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+  flex-shrink: 0;
+}
+.avatar-lg { width: 48px; height: 48px; font-size: 1rem; }
+.avatar-sm { width: 28px; height: 28px; font-size: 0.7rem; }
+
+/* ─── Progress Bar ───────────────────────────── */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--accent-primary), #8B7CFF);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-fill.success { background: linear-gradient(90deg, #43E97B, #38F9D7); }
+.progress-fill.warning { background: linear-gradient(90deg, #F7971E, #FFD200); }
+.progress-fill.danger  { background: linear-gradient(90deg, #FF6584, #FF8C69); }
+
+/* ─── Toast Notifications ────────────────────── */
+#toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 250px;
+}
+.toast.success { border-right: 3px solid var(--accent-tertiary); }
+.toast.warning { border-right: 3px solid var(--accent-warning); }
+.toast.error   { border-right: 3px solid var(--accent-secondary); }
+.toast.info    { border-right: 3px solid var(--accent-info); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-30px); }
+}
+
+/* ─── Overlay / Modal backdrop ───────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 800;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+.overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ─── Page transition ────────────────────────── */
+.page-view {
+  animation: pageIn 0.3s ease;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Skeleton Loaders ───────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--border-subtle) 25%, var(--border-medium) 50%, var(--border-subtle) 75%);
+  background-size: 200% 100%;
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Tooltip ────────────────────────────────── */
+[data-tooltip] { position: relative; }
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 50%;
+  transform: translateX(50%);
+  background: var(--text-primary);
+  color: var(--bg-surface);
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+  z-index: 100;
+}
+[data-tooltip]:hover::after { opacity: 1; }
+/* ============================================
+   GPMS - layout.css
+   Shell layout, sidebar, topbar, responsive
+   ============================================ */
+
+/* ─── App Shell ──────────────────────────────── */
+#app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── LOGIN SCREEN ───────────────────────────── */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-base);
+  z-index: 1000;
+  overflow: hidden;
+  transition: opacity var(--transition-slow);
+}
+
+/* Background decoration */
+#login-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(108,99,255,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,101,132,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(67,233,123,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.login-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+  animation: loginCardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes loginCardIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.login-logo-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent-primary), #8B7CFF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(108,99,255,0.35);
+  font-size: 1.5rem;
+  color: white;
+}
+
+.login-logo h1 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+.login-logo span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.login-title h2 { font-size: 1.5rem; margin-bottom: 0.4rem; }
+.login-title p  { font-size: 0.875rem; color: var(--text-secondary); }
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.45rem;
+}
+.form-control {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: var(--bg-base);
+  border: 1.5px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  outline: none;
+  direction: rtl;
+}
+.form-control:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(108,99,255,0.1);
+  background: var(--bg-surface);
+}
+.form-control::placeholder { color: var(--text-muted); }
+
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.role-card {
+  padding: 0.75rem;
+  border: 1.5px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-fast);
+  background: var(--bg-base);
+}
+.role-card:hover {
+  border-color: var(--accent-primary);
+  background: rgba(108,99,255,0.05);
+}
+.role-card.selected {
+  border-color: var(--accent-primary);
+  background: rgba(108,99,255,0.1);
+  box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+}
+.role-card .role-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+.role-card .role-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.role-card .role-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+/* ─── MAIN APP SHELL ─────────────────────────── */
+#main-app {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ─── Sidebar ────────────────────────────────── */
+#sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 200;
+  transition: width var(--transition-slow), transform var(--transition-slow);
+  overflow: hidden;
+  border-left: 1px solid rgba(255,255,255,0.04);
+}
+
+#sidebar.collapsed {
+  width: var(--sidebar-collapsed);
+}
+
+/* Sidebar Brand */
+.sidebar-brand {
+  height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  gap: 0.875rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebar-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-primary), #8B7CFF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(108,99,255,0.4);
+  font-size: 1rem;
+  color: white;
+}
+
+.sidebar-brand-text { overflow: hidden; }
+.sidebar-brand-text h2 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: white;
+  white-space: nowrap;
+  font-family: var(--font-display);
+}
+.sidebar-brand-text span {
+  font-size: 0.65rem;
+  color: var(--text-sidebar);
+  display: block;
+  white-space: nowrap;
+}
+
+/* Sidebar User */
+.sidebar-user {
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.sidebar-user-info { overflow: hidden; }
+.sidebar-user-info .user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-user-info .user-role {
+  font-size: 0.68rem;
+  color: var(--text-sidebar);
+  white-space: nowrap;
+}
+
+/* Sidebar Nav */
+.sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  padding: 0.75rem 1.4rem 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity var(--transition-normal);
+}
+#sidebar.collapsed .nav-section-label { opacity: 0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.7rem 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  border-radius: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--text-sidebar);
+  margin: 0.1rem 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.nav-item:hover {
+  background: var(--bg-sidebar-hover);
+  color: #D0D4FF;
+}
+
+.nav-item.active {
+  background: var(--bg-sidebar-active);
+  color: white;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--accent-primary);
+  border-radius: var(--radius-full) 0 0 var(--radius-full);
+}
+
+.nav-item-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.nav-item-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  flex: 1;
+  white-space: nowrap;
+}
+.nav-item-badge {
+  flex-shrink: 0;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1rem 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-toggle {
+  width: 100%;
+  padding: 0.6rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-sidebar);
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sidebar-toggle:hover {
+  background: var(--bg-sidebar-hover);
+  color: white;
+}
+.sidebar-toggle-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+  transition: transform var(--transition-slow);
+}
+#sidebar.collapsed .sidebar-toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* ─── Top Bar ────────────────────────────────── */
+#topbar {
+  position: fixed;
+  top: 0;
+  right: var(--sidebar-width);
+  left: 0;
+  height: var(--topbar-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 100;
+  transition: right var(--transition-slow);
+  box-shadow: var(--shadow-sm);
+}
+
+#sidebar.collapsed ~ #topbar,
+body.sidebar-collapsed #topbar {
+  right: var(--sidebar-collapsed);
+}
+
+.topbar-start {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topbar-page-title {
+  display: flex;
+  flex-direction: column;
+}
+.topbar-page-title h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.topbar-page-title .breadcrumb {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.topbar-end {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-base);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.875rem;
+  transition: all var(--transition-fast);
+}
+.search-bar:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(108,99,255,0.08);
+}
+.search-bar input {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  width: 200px;
+  direction: rtl;
+}
+.search-bar input::placeholder { color: var(--text-muted); }
+.search-icon { color: var(--text-muted); font-size: 0.875rem; }
+
+.theme-toggle {
+  width: 52px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--bg-base);
+  border: 1.5px solid var(--border-medium);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-normal);
+  flex-shrink: 0;
+}
+.theme-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--accent-primary);
+  transition: transform var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  box-shadow: 0 2px 6px rgba(108,99,255,0.4);
+}
+[data-theme="dark"] .theme-toggle-thumb {
+  transform: translateX(-24px);
+}
+
+.notif-btn {
+  position: relative;
+}
+.notif-dot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  border: 2px solid var(--bg-surface);
+}
+
+.topbar-avatar {
+  cursor: pointer;
+  position: relative;
+}
+.topbar-avatar .avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-tertiary);
+  border: 2px solid var(--bg-surface);
+}
+
+/* Mobile sidebar toggle */
+.mobile-sidebar-toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* ─── Main Content ────────────────────────────── */
+#content-area {
+  margin-right: var(--sidebar-width);
+  margin-top: var(--topbar-height);
+  flex: 1;
+  min-height: calc(100vh - var(--topbar-height));
+  padding: 2rem;
+  transition: margin-right var(--transition-slow);
+}
+
+body.sidebar-collapsed #content-area {
+  margin-right: var(--sidebar-collapsed);
+}
+
+/* ─── Page Sections ──────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.page-header-left h2 {
+  margin-bottom: 0.2rem;
+}
+.page-header-left p {
+  font-size: 0.875rem;
+}
+
+/* ─── Stats Grid ─────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--stat-color, var(--accent-primary));
+  opacity: 0.06;
+  transition: transform var(--transition-slow);
+}
+.stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.stat-card:hover::after { transform: scale(2.5); }
+
+.stat-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: var(--stat-bg, rgba(108,99,255,0.12));
+  color: var(--stat-color, var(--accent-primary));
+  flex-shrink: 0;
+}
+.stat-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+.stat-trend.up   { background: rgba(67,233,123,0.12); color: #2BC56A; }
+.stat-trend.down { background: rgba(255,101,132,0.12); color: var(--accent-secondary); }
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ─── Dashboard Grids ────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.dashboard-grid.three-col {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+/* ─── Placeholder Pages ──────────────────────── */
+.placeholder-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  gap: 1.5rem;
+}
+.placeholder-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-xl);
+  background: rgba(108,99,255,0.08);
+  border: 2px dashed var(--accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--accent-primary);
+}
+.placeholder-page h3 { font-size: 1.3rem; }
+.placeholder-page p  { color: var(--text-secondary); max-width: 360px; font-size: 0.9rem; }
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: rgba(108,99,255,0.08);
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: var(--radius-full);
+  color: var(--accent-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ─── Responsive ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .dashboard-grid.three-col { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 260px;
+  }
+
+  .mobile-sidebar-toggle { display: flex; }
+
+  #sidebar {
+    transform: translateX(100%);
+    width: var(--sidebar-width) !important;
+    z-index: 500;
+  }
+  #sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  #topbar {
+    right: 0;
+    padding: 0 1rem;
+  }
+
+  .search-bar { display: none; }
+
+  #content-area {
+    margin-right: 0;
+    padding: 1.25rem;
+  }
+
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-grid.three-col { grid-template-columns: 1fr; }
+
+  .page-header { flex-direction: column; align-items: flex-start; }
+
+  #overlay { display: block; }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .role-grid  { grid-template-columns: 1fr 1fr; }
+  #content-area { padding: 1rem; }
+  .login-card { padding: 2rem 1.5rem; }
+}
+    #main-app { display: none; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    body:not(.sidebar-collapsed) #topbar { right: var(--sidebar-width); }
+    body.sidebar-collapsed #topbar { right: var(--sidebar-collapsed); }
+    .last-no-border:last-child { border-bottom: none !important; padding-bottom: 0 !important; }
+  </style>
+</head>
+<body>
+
+  <div id="login-screen"></div>
+
+  <div id="main-app">
+    <div id="overlay" class="overlay"></div>
+    <aside id="sidebar"></aside>
+    <header id="topbar">
+      <div class="topbar-start">
+        <button class="mobile-sidebar-toggle" onclick="App.toggleSidebar()">☰</button>
+        <div class="topbar-page-title">
+          <h3>لوحة التحكم</h3>
+          <span class="breadcrumb">الرئيسية</span>
+        </div>
+      </div>
+      <div class="topbar-end">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="بحث... (Ctrl+K)">
+        </div>
+        <button class="theme-toggle" onclick="State.toggleTheme(); App.syncThemeToggle();">
+          <div class="theme-toggle-thumb">🌙</div>
+        </button>
+        <div class="btn-icon notif-btn" onclick="Toast.show('لديك 5 تنبيهات جديدة', 'warning')">
+          🔔<span class="notif-dot"></span>
+        </div>
+        <div class="topbar-avatar" onclick="Router.navigate('settings')">
+          <div class="avatar" style="cursor:pointer;">U</div>
+        </div>
+      </div>
+    </header>
+    <main id="content-area">
+      <div id="page-content"></div>
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+/**
+ * GPMS - state.js
+ * Central state management for Phase 1
+ */
+
+const State = (() => {
+  // ─── Initial State ───────────────────────────
+  const _state = {
+    // Auth
+    isAuthenticated: false,
+    currentUser: null,
+
+    // UI
+    currentRoute: 'dashboard',
+    sidebarCollapsed: false,
+    theme: localStorage.getItem('gpms_theme') || 'dark',
+    mobileSidebarOpen: false,
+
+    // Simulated data (Phase 1 static)
+    stats: {
+      totalMembers: 24,
+      activeTasks: 47,
+      completedTasks: 112,
+      attendance: 91,
+      pendingAlerts: 5,
+      activeProjects: 8,
+      projectProgress: 62,
+      upcomingMeetings: 3,
+    },
+
+    recentActivity: [
+      { id: 1, type: 'task', text: 'تم إنجاز مهمة "تصميم قاعدة البيانات"', user: 'أحمد محمد', time: 'منذ 10 دقائق', avatar: 'أ' },
+      { id: 2, type: 'meeting', text: 'اجتماع مراجعة المشروع غداً الساعة 10:00', user: 'سارة علي', time: 'منذ 30 دقيقة', avatar: 'س' },
+      { id: 3, type: 'alert', text: 'موعد تسليم تقرير المرحلة الأولى قريب', user: 'النظام', time: 'منذ ساعة', avatar: '⚠' },
+      { id: 4, type: 'task', text: 'بدأ العمل على "واجهة المستخدم الرئيسية"', user: 'خالد حسن', time: 'منذ ساعتين', avatar: 'خ' },
+      { id: 5, type: 'join', text: 'انضم عضو جديد إلى الفريق', user: 'منى أحمد', time: 'منذ 3 ساعات', avatar: 'م' },
+    ],
+
+    projects: [
+      { id: 1, name: 'نظام إدارة مشاريع التخرج', progress: 62, status: 'active', members: 6, deadline: '2025-06-15', color: '#6C63FF' },
+      { id: 2, name: 'تطبيق جوال للتعلم الذكي', progress: 34, status: 'active', members: 4, deadline: '2025-07-01', color: '#FF6584' },
+      { id: 3, name: 'منصة التعليم الإلكتروني', progress: 88, status: 'review', members: 5, deadline: '2025-05-30', color: '#43E97B' },
+      { id: 4, name: 'نظام تحليل البيانات الأكاديمية', progress: 15, status: 'planning', members: 3, deadline: '2025-08-20', color: '#F7971E' },
+    ],
+
+    tasks: [
+      { id: 1, title: 'تصميم قاعدة البيانات', status: 'done', priority: 'high', assignee: 'أحمد' },
+      { id: 2, title: 'واجهة المستخدم الرئيسية', status: 'inprogress', priority: 'high', assignee: 'سارة' },
+      { id: 3, title: 'كتابة وثيقة المتطلبات', status: 'inprogress', priority: 'medium', assignee: 'خالد' },
+      { id: 4, title: 'اختبار وحدة المصادقة', status: 'todo', priority: 'medium', assignee: 'منى' },
+      { id: 5, title: 'تقرير المرحلة الأولى', status: 'todo', priority: 'urgent', assignee: 'عمر' },
+    ],
+  };
+
+  // ─── Listeners ───────────────────────────────
+  const _listeners = {};
+
+  function on(event, callback) {
+    if (!_listeners[event]) _listeners[event] = [];
+    _listeners[event].push(callback);
+  }
+
+  function emit(event, data) {
+    (_listeners[event] || []).forEach(cb => cb(data));
+  }
+
+  // ─── Getters ─────────────────────────────────
+  function get(key) {
+    return key ? _state[key] : { ..._state };
+  }
+
+  // ─── Setters ─────────────────────────────────
+  function set(key, value) {
+    _state[key] = value;
+    emit('change', { key, value });
+    emit(`change:${key}`, value);
+  }
+
+  // ─── Theme ───────────────────────────────────
+  function setTheme(theme) {
+    _state.theme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('gpms_theme', theme);
+    emit('themeChange', theme);
+  }
+
+  function toggleTheme() {
+    setTheme(_state.theme === 'dark' ? 'light' : 'dark');
+  }
+
+  // ─── Sidebar ─────────────────────────────────
+  function toggleSidebar() {
+    _state.sidebarCollapsed = !_state.sidebarCollapsed;
+    localStorage.setItem('gpms_sidebar', _state.sidebarCollapsed ? '1' : '0');
+    emit('sidebarToggle', _state.sidebarCollapsed);
+  }
+
+  // ─── Auth ─────────────────────────────────────
+  function login(user) {
+    _state.isAuthenticated = true;
+    _state.currentUser = user;
+    sessionStorage.setItem('gpms_user', JSON.stringify(user));
+    emit('login', user);
+  }
+
+  function logout() {
+    _state.isAuthenticated = false;
+    _state.currentUser = null;
+    sessionStorage.removeItem('gpms_user');
+    emit('logout');
+  }
+
+  function restoreSession() {
+    try {
+      const saved = sessionStorage.getItem('gpms_user');
+      if (saved) {
+        const user = JSON.parse(saved);
+        _state.isAuthenticated = true;
+        _state.currentUser = user;
+        return user;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  // ─── Init ─────────────────────────────────────
+  function init() {
+    // Restore theme
+    document.documentElement.setAttribute('data-theme', _state.theme);
+
+    // Restore sidebar state
+    const savedSidebar = localStorage.getItem('gpms_sidebar');
+    if (savedSidebar === '1') _state.sidebarCollapsed = true;
+  }
+
+  return { get, set, on, emit, setTheme, toggleTheme, toggleSidebar, login, logout, restoreSession, init };
+})();
+
+window.State = State;
+/**
+ * GPMS - auth.js
+ * Simulated authentication (Phase 1 - UI only)
+ */
+
+const Auth = (() => {
+  // Role configurations
+  const roles = {
+    member: {
+      id: 'member',
+      label: 'عضو فريق',
+      icon: '👨‍💻',
+      desc: 'مطور / مصمم',
+      color: '#6C63FF',
+      defaultName: 'أحمد محمد',
+      navAccess: ['dashboard', 'projects', 'tasks', 'meetings', 'chat', 'settings'],
+    },
+    leader: {
+      id: 'leader',
+      label: 'قائد فريق',
+      icon: '👑',
+      desc: 'يدير الفريق والمهام',
+      color: '#F7971E',
+      defaultName: 'سارة علي',
+      navAccess: ['dashboard', 'projects', 'teams', 'tasks', 'meetings', 'chat', 'reports', 'settings'],
+    },
+    assistant: {
+      id: 'assistant',
+      label: 'مساعد تدريس',
+      icon: '🎓',
+      desc: 'يتابع ويقيّم المشاريع',
+      color: '#43E97B',
+      defaultName: 'د. خالد حسن',
+      navAccess: ['dashboard', 'projects', 'teams', 'tasks', 'meetings', 'research', 'reports', 'settings'],
+    },
+    project_leader: {
+      id: 'project_leader',
+      label: 'مشرف المشروع',
+      icon: '🏛️',
+      desc: 'إشراف على جميع الفرق',
+      color: '#FF6584',
+      defaultName: 'أ.د. منى إبراهيم',
+      navAccess: ['dashboard', 'projects', 'teams', 'tasks', 'meetings', 'research', 'chat', 'reports', 'settings'],
+    },
+  };
+
+  let _selectedRole = null;
+
+  // ─── Render Login Screen ──────────────────────
+  function renderLogin() {
+    const screen = document.getElementById('login-screen');
+    if (!screen) return;
+
+    screen.innerHTML = `
+      <div class="login-card">
+        <div class="login-logo">
+          <div class="login-logo-icon">🎓</div>
+          <div>
+            <h1>GPMS</h1>
+            <span>نظام إدارة مشاريع التخرج</span>
+          </div>
+        </div>
+
+        <div class="login-title">
+          <h2>مرحباً بك</h2>
+          <p>سجّل دخولك للمتابعة</p>
+        </div>
+
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input class="form-control" id="login-email" type="email" placeholder="user@university.edu" value="admin@gpms.edu" dir="ltr">
+        </div>
+
+        <div class="form-group">
+          <label>كلمة المرور</label>
+          <input class="form-control" id="login-password" type="password" placeholder="••••••••" value="••••••••">
+        </div>
+
+        <div class="form-group">
+          <label>اختر دورك</label>
+          <div class="role-grid" id="role-grid">
+            ${Object.values(roles).map(r => `
+              <div class="role-card" data-role="${r.id}" onclick="Auth.selectRole('${r.id}')">
+                <span class="role-icon">${r.icon}</span>
+                <div class="role-name">${r.label}</div>
+                <div class="role-desc">${r.desc}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <button class="btn btn-primary w-full" id="login-btn" onclick="Auth.attemptLogin()" style="padding: 0.8rem; font-size: 1rem; margin-top:0.5rem;">
+          تسجيل الدخول
+        </button>
+
+        <p style="text-align:center; margin-top:1.25rem; font-size:0.78rem; color: var(--text-muted);">
+          بيانات تجريبية — اختر دوراً وسجّل الدخول
+        </p>
+      </div>
+    `;
+
+    // Auto-select first role
+    selectRole('leader');
+  }
+
+  // ─── Select Role ─────────────────────────────
+  function selectRole(roleId) {
+    _selectedRole = roleId;
+    document.querySelectorAll('.role-card').forEach(el => {
+      el.classList.toggle('selected', el.dataset.role === roleId);
+    });
+  }
+
+  // ─── Attempt Login ────────────────────────────
+  function attemptLogin() {
+    if (!_selectedRole) {
+      Toast.show('يرجى اختيار دورك أولاً', 'warning');
+      return;
+    }
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span style="animation: spin 0.6s linear infinite; display:inline-block">⏳</span> جاري تسجيل الدخول...';
+
+    // Simulate async login
+    setTimeout(() => {
+      const role = roles[_selectedRole];
+      const user = {
+        id: 'u_' + Date.now(),
+        name: role.defaultName,
+        role: role.id,
+        roleLabel: role.label,
+        roleIcon: role.icon,
+        roleColor: role.color,
+        email: document.getElementById('login-email')?.value || 'admin@gpms.edu',
+        avatar: role.defaultName.charAt(0),
+        navAccess: role.navAccess,
+      };
+
+      State.login(user);
+      App.showMainApp(user);
+    }, 900);
+  }
+
+  // ─── Logout ───────────────────────────────────
+  function logout() {
+    State.logout();
+    App.showLogin();
+    Toast.show('تم تسجيل الخروج بنجاح', 'info');
+  }
+
+  function getRoles() { return roles; }
+  function getRole(id) { return roles[id]; }
+
+  return { renderLogin, selectRole, attemptLogin, logout, getRoles, getRole };
+})();
+
+window.Auth = Auth;
+/**
+ * GPMS - components/components.js
+ * All reusable HTML component renderers
+ */
+
+const Components = (() => {
+
+  // ─── Sidebar ─────────────────────────────────
+  function renderSidebar(user) {
+    const navGroups = [
+      {
+        label: 'الرئيسي',
+        items: [
+          { route: 'dashboard', icon: '🏠', label: 'لوحة التحكم' },
+          { route: 'projects',  icon: '📁', label: 'المشاريع', badge: '8' },
+        ]
+      },
+      {
+        label: 'إدارة الفريق',
+        items: [
+          { route: 'teams',    icon: '👥', label: 'الفرق والأعضاء' },
+          { route: 'tasks',    icon: '✅', label: 'المهام', badge: '12' },
+          { route: 'meetings', icon: '📅', label: 'الاجتماعات', badge: '3' },
+        ]
+      },
+      {
+        label: 'الأدوات',
+        items: [
+          { route: 'research', icon: '🔬', label: 'مركز البحث', restricted: true },
+          { route: 'chat',     icon: '💬', label: 'المحادثات', badge: '5', restricted: true },
+          { route: 'reports',  icon: '📊', label: 'التقارير' },
+        ]
+      },
+      {
+        label: 'النظام',
+        items: [
+          { route: 'settings', icon: '⚙️', label: 'الإعدادات' },
+        ]
+      }
+    ];
+
+    const navAccess = user?.navAccess || Object.keys(Router.getAllRoutes());
+    const currentRoute = State.get('currentRoute');
+
+    const navHTML = navGroups.map(group => {
+      const visibleItems = group.items.filter(item => navAccess.includes(item.route));
+      if (!visibleItems.length) return '';
+
+      return `
+        <div class="nav-section-label">${group.label}</div>
+        ${visibleItems.map(item => `
+          <div class="nav-item ${item.route === currentRoute ? 'active' : ''}"
+               data-route="${item.route}"
+               onclick="Router.navigate('${item.route}')"
+               data-tooltip="${item.label}">
+            <span class="nav-item-icon">${item.icon}</span>
+            <span class="nav-item-text">${item.label}</span>
+            ${item.badge ? `<span class="badge-count nav-item-badge">${item.badge}</span>` : ''}
+          </div>
+        `).join('')}
+      `;
+    }).join('');
+
+    return `
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">🎓</div>
+        <div class="sidebar-brand-text">
+          <h2>GPMS</h2>
+          <span>نظام مشاريع التخرج</span>
+        </div>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="avatar" style="background: linear-gradient(135deg, ${user.roleColor || '#6C63FF'}, #8B7CFF)">
+          ${user.avatar}
+        </div>
+        <div class="sidebar-user-info">
+          <div class="user-name">${user.name}</div>
+          <div class="user-role">${user.roleIcon} ${user.roleLabel}</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        ${navHTML}
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="nav-item" onclick="Auth.logout()" style="cursor:pointer;">
+          <span class="nav-item-icon">🚪</span>
+          <span class="nav-item-text">تسجيل الخروج</span>
+        </div>
+        <button class="sidebar-toggle" onclick="App.toggleSidebar()">
+          <span class="sidebar-toggle-icon">◀</span>
+          <span class="nav-item-text">طي القائمة</span>
+        </button>
+      </div>
+    `;
+  }
+
+  // ─── Dashboard ────────────────────────────────
+  function renderDashboard() {
+    const stats = State.get('stats');
+    const projects = State.get('projects');
+    const tasks = State.get('tasks');
+    const activity = State.get('recentActivity');
+
+    return `
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>لوحة التحكم</h2>
+          <p>مرحباً بعودتك! إليك ملخص اليوم.</p>
+        </div>
+        <div class="flex gap-3">
+          <button class="btn btn-secondary" onclick="Toast.show('جاري تحديث البيانات...', 'info')">🔄 تحديث</button>
+          <button class="btn btn-primary">➕ مشروع جديد</button>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        ${renderStatCard('👥', 'إجمالي الأعضاء', stats.totalMembers, '+3', 'up', '#6C63FF', 'rgba(108,99,255,0.12)')}
+        ${renderStatCard('✅', 'المهام النشطة', stats.activeTasks, '+8', 'up', '#43E97B', 'rgba(67,233,123,0.12)')}
+        ${renderStatCard('📊', 'نسبة الحضور', stats.attendance + '%', '+2%', 'up', '#38A1F3', 'rgba(56,161,243,0.12)')}
+        ${renderStatCard('⚠️', 'التنبيهات', stats.pendingAlerts, '-2', 'down', '#FF6584', 'rgba(255,101,132,0.12)')}
+        ${renderStatCard('📁', 'المشاريع النشطة', stats.activeProjects, '+1', 'up', '#F7971E', 'rgba(247,151,30,0.12)')}
+        ${renderStatCard('📅', 'اجتماعات قادمة', stats.upcomingMeetings, '', '', '#8B7CFF', 'rgba(139,124,255,0.12)')}
+      </div>
+
+      <!-- Main Grid -->
+      <div class="dashboard-grid" style="grid-template-columns: 1.6fr 1fr; margin-bottom: 1.25rem;">
+
+        <!-- Projects -->
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom:1.25rem;">
+            <h4>المشاريع الجارية</h4>
+            <button class="btn btn-secondary text-sm" onclick="Router.navigate('projects')">عرض الكل</button>
+          </div>
+          <div class="flex flex-col gap-4">
+            ${projects.map(p => renderProjectRow(p)).join('')}
+          </div>
+        </div>
+
+        <!-- Task Overview -->
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom:1.25rem;">
+            <h4>حالة المهام</h4>
+            <button class="btn btn-secondary text-sm" onclick="Router.navigate('tasks')">عرض الكل</button>
+          </div>
+          ${renderTaskDonut(stats.activeTasks, stats.completedTasks)}
+          <div class="flex flex-col gap-3" style="margin-top:1.25rem;">
+            ${renderTaskLegendRow('⏳', 'قيد التنفيذ', tasks.filter(t => t.status === 'inprogress').length, '#6C63FF')}
+            ${renderTaskLegendRow('✅', 'مكتملة', stats.completedTasks, '#43E97B')}
+            ${renderTaskLegendRow('📝', 'لم تبدأ', tasks.filter(t => t.status === 'todo').length, '#F7971E')}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Grid -->
+      <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom:1.25rem;">
+            <h4>النشاط الأخير</h4>
+            <span class="badge badge-primary">اليوم</span>
+          </div>
+          <div class="flex flex-col gap-3">
+            ${activity.map(a => renderActivityRow(a)).join('')}
+          </div>
+        </div>
+
+        <!-- Upcoming Tasks -->
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom:1.25rem;">
+            <h4>المهام العاجلة</h4>
+            <span class="badge badge-danger">5 مهام</span>
+          </div>
+          <div class="flex flex-col gap-3">
+            ${tasks.map(t => renderTaskRow(t)).join('')}
+          </div>
+        </div>
+
+      </div>
+    `;
+  }
+
+  // ─── Stat Card ───────────────────────────────
+  function renderStatCard(icon, label, value, trend, trendDir, color, bg) {
+    return `
+      <div class="stat-card" style="--stat-color: ${color}; --stat-bg: ${bg};">
+        <div class="stat-header">
+          <div class="stat-icon">${icon}</div>
+          ${trend ? `<div class="stat-trend ${trendDir}">${trendDir === 'up' ? '▲' : '▼'} ${trend}</div>` : ''}
+        </div>
+        <div class="stat-value">${value}</div>
+        <div class="stat-label">${label}</div>
+      </div>
+    `;
+  }
+
+  // ─── Project Row ──────────────────────────────
+  function renderProjectRow(project) {
+    const statusMap = {
+      active: { label: 'نشط', class: 'badge-primary' },
+      review: { label: 'مراجعة', class: 'badge-warning' },
+      planning: { label: 'تخطيط', class: 'badge-info' },
+      done: { label: 'مكتمل', class: 'badge-success' },
+    };
+    const status = statusMap[project.status] || statusMap.active;
+
+    return `
+      <div style="padding-bottom:1rem; border-bottom: 1px solid var(--border-subtle);" class="last-no-border">
+        <div class="flex items-center justify-between" style="margin-bottom:0.5rem;">
+          <div class="flex items-center gap-2">
+            <div style="width:10px; height:10px; border-radius:50%; background:${project.color}; flex-shrink:0;"></div>
+            <span style="font-size:0.875rem; font-weight:600; color:var(--text-primary);">${project.name}</span>
+          </div>
+          <span class="badge ${status.class}">${status.label}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="progress-bar" style="flex:1;">
+            <div class="progress-fill" data-value="${project.progress}" style="width:0%; background: linear-gradient(90deg, ${project.color}, ${project.color}99);"></div>
+          </div>
+          <span style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); min-width:30px; text-align:left;">${project.progress}%</span>
+        </div>
+        <div class="flex items-center justify-between" style="margin-top:0.5rem;">
+          <span class="text-xs text-muted">👥 ${project.members} أعضاء</span>
+          <span class="text-xs text-muted">📅 ${project.deadline}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Task Donut ───────────────────────────────
+  function renderTaskDonut(active, completed) {
+    const total = active + completed;
+    const pct = Math.round((completed / total) * 100);
+    const r = 50, cx = 60, cy = 60;
+    const circumference = 2 * Math.PI * r;
+    const dashOffset = circumference - (pct / 100) * circumference;
+
+    return `
+      <div style="display:flex; align-items:center; justify-content:center; position:relative; height:120px;">
+        <svg width="120" height="120" viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--border-subtle)" stroke-width="14"/>
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--accent-primary)" stroke-width="14"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}"
+            stroke-linecap="round" style="transition: stroke-dashoffset 1s ease;"/>
+        </svg>
+        <div style="position:absolute; text-align:center;">
+          <div style="font-size:1.5rem; font-weight:800; font-family:var(--font-display); color:var(--text-primary);">${pct}%</div>
+          <div style="font-size:0.65rem; color:var(--text-muted); font-weight:500;">مكتملة</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Task Legend Row ──────────────────────────
+  function renderTaskLegendRow(icon, label, count, color) {
+    return `
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div style="width:8px; height:8px; border-radius:2px; background:${color}; flex-shrink:0;"></div>
+          <span style="font-size:0.825rem; color:var(--text-secondary);">${icon} ${label}</span>
+        </div>
+        <span style="font-size:0.875rem; font-weight:700; color:var(--text-primary);">${count}</span>
+      </div>
+    `;
+  }
+
+  // ─── Activity Row ─────────────────────────────
+  function renderActivityRow(activity) {
+    const typeColors = {
+      task: '#6C63FF', meeting: '#43E97B', alert: '#F7971E', join: '#38A1F3'
+    };
+    const color = typeColors[activity.type] || '#6C63FF';
+
+    return `
+      <div class="flex items-center gap-3">
+        <div class="avatar avatar-sm" style="background:${color}; font-size:0.7rem; color:white; min-width:28px;">
+          ${activity.avatar}
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:0.8rem; font-weight:500; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${activity.text}</div>
+          <div style="font-size:0.7rem; color:var(--text-muted);">${activity.user} · ${activity.time}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Task Row ─────────────────────────────────
+  function renderTaskRow(task) {
+    const priorityMap = {
+      urgent: { label: 'عاجل', class: 'badge-danger' },
+      high:   { label: 'عالي', class: 'badge-warning' },
+      medium: { label: 'متوسط', class: 'badge-primary' },
+      low:    { label: 'منخفض', class: 'badge-info' },
+    };
+    const statusMap = {
+      todo:       { icon: '📝', label: 'لم يبدأ' },
+      inprogress: { icon: '⏳', label: 'جاري' },
+      done:       { icon: '✅', label: 'مكتمل' },
+    };
+    const priority = priorityMap[task.priority] || priorityMap.medium;
+    const status = statusMap[task.status] || statusMap.todo;
+
+    return `
+      <div class="flex items-center gap-3" style="padding:0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span style="font-size:1rem;">${status.icon}</span>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:0.825rem; font-weight:500; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${task.title}</div>
+          <div style="font-size:0.7rem; color:var(--text-muted);">👤 ${task.assignee}</div>
+        </div>
+        <span class="badge ${priority.class}">${priority.label}</span>
+      </div>
+    `;
+  }
+
+  // ─── Settings Page ───────────────────────────
+  function renderSettings() {
+    const user = State.get('currentUser');
+    const theme = State.get('theme');
+
+    return `
+      <div class="page-header">
+        <div class="page-header-left">
+          <h2>الإعدادات</h2>
+          <p>إدارة حسابك وتفضيلات النظام</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem;">
+
+        <!-- Profile Card -->
+        <div class="card">
+          <h4 style="margin-bottom:1.25rem;">الملف الشخصي</h4>
+          <div class="flex items-center gap-3" style="margin-bottom:1.5rem;">
+            <div class="avatar avatar-lg" style="background: linear-gradient(135deg, ${user.roleColor}, #8B7CFF); font-size:1.1rem; color:white;">
+              ${user.avatar}
+            </div>
+            <div>
+              <div style="font-weight:700; font-size:1rem; color:var(--text-primary);">${user.name}</div>
+              <div style="font-size:0.8rem; color:var(--text-secondary);">${user.roleIcon} ${user.roleLabel}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${user.email}</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>الاسم الكامل</label>
+            <input class="form-control" value="${user.name}" placeholder="الاسم الكامل">
+          </div>
+          <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input class="form-control" value="${user.email}" placeholder="email@example.com" dir="ltr">
+          </div>
+          <button class="btn btn-primary" style="margin-top:0.5rem;" onclick="Toast.show('تم حفظ التغييرات', 'success')">
+            💾 حفظ التغييرات
+          </button>
+        </div>
+
+        <!-- Appearance -->
+        <div class="card">
+          <h4 style="margin-bottom:1.25rem;">المظهر والتخصيص</h4>
+
+          <div style="margin-bottom:1.5rem;">
+            <div style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.75rem;">وضع العرض</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              <div class="role-card ${theme === 'light' ? 'selected' : ''}" onclick="State.setTheme('light'); App.syncThemeToggle(); Toast.show('تم تفعيل الوضع الفاتح', 'info');" style="text-align:center; padding:1rem;">
+                <span class="role-icon">☀️</span>
+                <div class="role-name">فاتح</div>
+              </div>
+              <div class="role-card ${theme === 'dark' ? 'selected' : ''}" onclick="State.setTheme('dark'); App.syncThemeToggle(); Toast.show('تم تفعيل الوضع الداكن', 'info');" style="text-align:center; padding:1rem;">
+                <span class="role-icon">🌙</span>
+                <div class="role-name">داكن</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="margin-bottom:1rem;">
+            <div style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.5rem;">معلومات النظام</div>
+            <div class="flex items-center justify-between" style="font-size:0.825rem; padding:0.4rem 0;">
+              <span style="color:var(--text-muted);">الإصدار</span>
+              <span class="badge badge-primary">v1.0.0 — Phase 1</span>
+            </div>
+            <div class="flex items-center justify-between" style="font-size:0.825rem; padding:0.4rem 0;">
+              <span style="color:var(--text-muted);">الدور الحالي</span>
+              <span style="font-weight:600; color:var(--text-primary);">${user.roleIcon} ${user.roleLabel}</span>
+            </div>
+            <div class="flex items-center justify-between" style="font-size:0.825rem; padding:0.4rem 0;">
+              <span style="color:var(--text-muted);">اللغة</span>
+              <span style="font-weight:600; color:var(--text-primary);">العربية (RTL)</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <button class="btn btn-secondary w-full" style="margin-top:0.5rem; color: var(--accent-secondary);" onclick="Auth.logout()">
+            🚪 تسجيل الخروج
+          </button>
+        </div>
+
+      </div>
+    `;
+  }
+
+  // ─── Placeholder Pages ───────────────────────
+  function renderPlaceholder(route, info) {
+    const descriptions = {
+      projects:  'إدارة وتتبع مشاريع التخرج — قريباً في المرحلة الثانية',
+      teams:     'إدارة أعضاء الفرق وصلاحياتهم — قريباً في المرحلة الثانية',
+      tasks:     'نظام إدارة المهام والإسنادات — قريباً في المرحلة الثانية',
+      meetings:  'جدولة ومتابعة الاجتماعات الأسبوعية — قريباً في المرحلة الثانية',
+      research:  'مركز البحث العلمي والمصادر الأكاديمية — قريباً في المرحلة الثانية',
+      chat:      'نظام التواصل الفوري بين أعضاء الفريق — قريباً في المرحلة الثانية',
+      reports:   'التقارير التحليلية والإحصائية المفصّلة — قريباً في المرحلة الثانية',
+    };
+
+    return `
+      <div class="placeholder-page">
+        <div class="placeholder-icon">${info.icon}</div>
+        <h3>${info.title}</h3>
+        <p>${descriptions[route] || 'هذا القسم قيد التطوير وسيكون متاحاً قريباً.'}</p>
+        <div class="coming-soon-badge">
+          🚧 قريباً — المرحلة الثانية
+        </div>
+        <button class="btn btn-secondary" onclick="Router.navigate('dashboard')">العودة للوحة التحكم</button>
+      </div>
+    `;
+  }
+
+  return {
+    renderSidebar,
+    renderDashboard,
+    renderSettings,
+    renderPlaceholder,
+  };
+})();
+
+window.Components = Components;
+/**
+ * GPMS - router.js
+ * Client-side SPA router (hash-based)
+ */
+
+const Router = (() => {
+  // ─── Route Definitions ───────────────────────
+  const routes = {
+    'dashboard':       { title: 'لوحة التحكم',    icon: '🏠', breadcrumb: 'الرئيسية' },
+    'projects':        { title: 'المشاريع',        icon: '📁', breadcrumb: 'الرئيسية / المشاريع' },
+    'teams':           { title: 'الفرق والأعضاء', icon: '👥', breadcrumb: 'الرئيسية / الفرق' },
+    'tasks':           { title: 'المهام',          icon: '✅', breadcrumb: 'الرئيسية / المهام' },
+    'meetings':        { title: 'الاجتماعات',      icon: '📅', breadcrumb: 'الرئيسية / الاجتماعات' },
+    'research':        { title: 'مركز البحث',      icon: '🔬', breadcrumb: 'الرئيسية / مركز البحث' },
+    'chat':            { title: 'المحادثات',       icon: '💬', breadcrumb: 'الرئيسية / المحادثات' },
+    'reports':         { title: 'التقارير',        icon: '📊', breadcrumb: 'الرئيسية / التقارير' },
+    'settings':        { title: 'الإعدادات',       icon: '⚙️', breadcrumb: 'الرئيسية / الإعدادات' },
+  };
+
+  let _currentRoute = 'dashboard';
+  let _listeners = [];
+
+  // ─── Navigate ────────────────────────────────
+  function navigate(route) {
+    if (!routes[route]) {
+      console.warn(`[Router] Unknown route: ${route}`);
+      route = 'dashboard';
+    }
+
+    _currentRoute = route;
+    window.location.hash = route;
+    State.set('currentRoute', route);
+
+    _listeners.forEach(cb => cb(route, routes[route]));
+    _updateUI(route);
+  }
+
+  // ─── Update UI ───────────────────────────────
+  function _updateUI(route) {
+    const info = routes[route];
+
+    // Update topbar title
+    const titleEl = document.querySelector('.topbar-page-title h3');
+    const breadEl = document.querySelector('.topbar-page-title .breadcrumb');
+    if (titleEl) titleEl.textContent = info.title;
+    if (breadEl) breadEl.textContent = info.breadcrumb;
+
+    // Update sidebar active state
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.route === route);
+    });
+
+    // Render page
+    _renderPage(route);
+
+    // Close mobile sidebar
+    State.set('mobileSidebarOpen', false);
+    document.getElementById('sidebar')?.classList.remove('mobile-open');
+    document.getElementById('overlay')?.classList.remove('active');
+  }
+
+  // ─── Render page content ─────────────────────
+  function _renderPage(route) {
+    const content = document.getElementById('page-content');
+    if (!content) return;
+
+    content.innerHTML = '';
+    content.className = 'page-view';
+
+    // Force reflow for animation
+    void content.offsetWidth;
+
+    switch (route) {
+      case 'dashboard': content.innerHTML = Components.renderDashboard(); break;
+      case 'settings':  content.innerHTML = Components.renderSettings();  break;
+      default:          content.innerHTML = Components.renderPlaceholder(route, routes[route]); break;
+    }
+
+    // Post-render hooks
+    _afterRender(route);
+  }
+
+  function _afterRender(route) {
+    if (route === 'dashboard') {
+      // Animate progress bars
+      setTimeout(() => {
+        document.querySelectorAll('.progress-fill[data-value]').forEach(bar => {
+          bar.style.width = bar.dataset.value + '%';
+        });
+      }, 100);
+    }
+  }
+
+  // ─── Init ─────────────────────────────────────
+  function init() {
+    // Parse initial hash
+    const hash = window.location.hash.replace('#', '');
+    const initial = routes[hash] ? hash : 'dashboard';
+
+    // Handle hash changes
+    window.addEventListener('hashchange', () => {
+      const h = window.location.hash.replace('#', '');
+      if (routes[h] && h !== _currentRoute) navigate(h);
+    });
+
+    navigate(initial);
+  }
+
+  function on(cb) { _listeners.push(cb); }
+  function current() { return _currentRoute; }
+  function getInfo(route) { return routes[route || _currentRoute]; }
+  function getAllRoutes() { return routes; }
+
+  return { navigate, init, on, current, getInfo, getAllRoutes };
+})();
+
+window.Router = Router;
+/**
+ * GPMS - app.js
+ * Main application controller
+ */
+
+// ─── Toast Notifications ──────────────────────
+const Toast = (() => {
+  function show(message, type = 'info', duration = 3500) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const icons = { success: '✅', warning: '⚠️', error: '❌', info: 'ℹ️' };
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.animation = 'toastOut 0.3s ease forwards';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  return { show };
+})();
+
+// ─── App Controller ────────────────────────────
+const App = (() => {
+
+  // ─── Show Login ──────────────────────────────
+  function showLogin() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('main-app').style.display = 'none';
+    Auth.renderLogin();
+  }
+
+  // ─── Show Main App ────────────────────────────
+  function showMainApp(user) {
+    // Hide login
+    const loginScreen = document.getElementById('login-screen');
+    loginScreen.style.opacity = '0';
+    loginScreen.style.transition = 'opacity 0.4s ease';
+
+    setTimeout(() => {
+      loginScreen.style.display = 'none';
+      loginScreen.style.opacity = '1';
+    }, 400);
+
+    // Show main app
+    const mainApp = document.getElementById('main-app');
+    mainApp.style.display = 'flex';
+    mainApp.style.opacity = '0';
+
+    // Render sidebar
+    const sidebar = document.getElementById('sidebar');
+    sidebar.innerHTML = Components.renderSidebar(user);
+
+    // Restore sidebar state
+    if (State.get('sidebarCollapsed')) {
+      sidebar.classList.add('collapsed');
+      document.body.classList.add('sidebar-collapsed');
+    }
+
+    // Topbar user info
+    _updateTopbarUser(user);
+
+    setTimeout(() => {
+      mainApp.style.transition = 'opacity 0.4s ease';
+      mainApp.style.opacity = '1';
+      Router.init();
+    }, 50);
+
+    Toast.show(`مرحباً ${user.name}! 👋`, 'success');
+  }
+
+  // ─── Update Topbar User ───────────────────────
+  function _updateTopbarUser(user) {
+    const avatarEl = document.querySelector('.topbar-avatar .avatar');
+    if (avatarEl) {
+      avatarEl.textContent = user.avatar;
+      avatarEl.style.background = `linear-gradient(135deg, ${user.roleColor}, #8B7CFF)`;
+    }
+  }
+
+  // ─── Toggle Sidebar ───────────────────────────
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+      // Mobile: slide in/out
+      const isOpen = sidebar.classList.toggle('mobile-open');
+      document.getElementById('overlay').classList.toggle('active', isOpen);
+      State.set('mobileSidebarOpen', isOpen);
+    } else {
+      // Desktop: collapse/expand
+      sidebar.classList.toggle('collapsed');
+      const collapsed = sidebar.classList.contains('collapsed');
+      document.body.classList.toggle('sidebar-collapsed', collapsed);
+      State.set('sidebarCollapsed', collapsed);
+      localStorage.setItem('gpms_sidebar', collapsed ? '1' : '0');
+    }
+  }
+
+  // ─── Sync Theme Toggle ────────────────────────
+  function syncThemeToggle() {
+    const thumb = document.querySelector('.theme-toggle-thumb');
+    const theme = State.get('theme');
+    if (thumb) thumb.textContent = theme === 'dark' ? '🌙' : '☀️';
+
+    // Also sync settings page role cards if visible
+    document.querySelectorAll('.role-card[onclick*="setTheme"]').forEach(el => {
+      const isLight = el.getAttribute('onclick')?.includes("'light'");
+      el.classList.toggle('selected', isLight ? theme === 'light' : theme === 'dark');
+    });
+  }
+
+  // ─── Topbar search handler ─────────────────────
+  function handleSearch(e) {
+    if (e.key === 'Enter') {
+      const val = e.target.value.trim();
+      if (val) Toast.show(`🔍 البحث عن: "${val}" — قريباً`, 'info');
+    }
+  }
+
+  // ─── Init ─────────────────────────────────────
+  function init() {
+    // Init state (theme etc.)
+    State.init();
+
+    // Theme toggle listener
+    State.on('themeChange', () => syncThemeToggle());
+
+    // Overlay click closes mobile sidebar
+    document.getElementById('overlay')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.remove('mobile-open');
+      document.getElementById('overlay')?.classList.remove('active');
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', e => {
+      // Ctrl/Cmd + K = search focus
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        document.querySelector('.search-bar input')?.focus();
+      }
+      // Escape = close mobile sidebar
+      if (e.key === 'Escape') {
+        document.getElementById('sidebar')?.classList.remove('mobile-open');
+        document.getElementById('overlay')?.classList.remove('active');
+      }
+    });
+
+    // Search input
+    document.querySelector('.search-bar input')?.addEventListener('keydown', handleSearch);
+
+    // Check for existing session
+    const savedUser = State.restoreSession();
+    if (savedUser) {
+      showMainApp(savedUser);
+    } else {
+      showLogin();
+    }
+
+    // Initial theme sync
+    syncThemeToggle();
+
+    console.log('%cGPMS v1.0 — Phase 1 Foundation', 'color:#6C63FF;font-weight:bold;font-size:14px;');
+    console.log('%c✔ State  ✔ Router  ✔ Auth  ✔ Components  ✔ Theme', 'color:#43E97B;font-size:12px;');
+  }
+
+  return { init, showLogin, showMainApp, toggleSidebar, syncThemeToggle, handleSearch };
+})();
+
+window.Toast = Toast;
+window.App = App;
+
+// ─── Boot ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => App.init());
+  </script>
+</body>
+</html>
